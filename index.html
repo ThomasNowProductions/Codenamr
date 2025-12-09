@@ -120,6 +120,14 @@
         currentCodename = generateCodename();
         document.getElementById('codename').textContent = currentCodename;
 
+        // Update button texts to show "Copy as" followed by the exact words they'll copy
+        document.getElementById('copyNormal').textContent = 'Copy as ' + currentCodename;
+        document.getElementById('copyDash').textContent = 'Copy as ' + currentCodename.replace(' ', '-');
+        document.getElementById('copyUpper').textContent = 'Copy as ' + currentCodename.toUpperCase().replace(' ', '_');
+        document.getElementById('copyLower').textContent = 'Copy as ' + currentCodename.replace(' ', '_');
+        document.getElementById('copyCamel').textContent = 'Copy as ' + (currentCodename.split(' ')[0] + currentCodename.split(' ')[1].charAt(0).toUpperCase() + currentCodename.split(' ')[1].slice(1));
+        document.getElementById('copyPascal').textContent = 'Copy as ' + (currentCodename.split(' ')[0].charAt(0).toUpperCase() + currentCodename.split(' ')[0].slice(1) + currentCodename.split(' ')[1].charAt(0).toUpperCase() + currentCodename.split(' ')[1].slice(1));
+
         document.getElementById('copyNormal').addEventListener('click', function() { copyToClipboard(currentCodename, this); });
         document.getElementById('copyDash').addEventListener('click', function() { copyToClipboard(currentCodename.replace(' ', '-'), this); });
         document.getElementById('copyUpper').addEventListener('click', function() { copyToClipboard(currentCodename.toUpperCase().replace(' ', '_'), this); });
