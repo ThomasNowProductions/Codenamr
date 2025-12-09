@@ -1,11 +1,35 @@
-use clap::Parser;
+use clap::{Parser, ValueEnum};
 use rand::seq::SliceRandom;
+use std::fmt;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
-    #[arg(short, long, help = "Output format", default_value = "normal")]
-    format: String,
+    #[arg(short, long, help = "Output format", default_value_t = Format::Normal, value_parser = clap::value_parser!(Format))]
+    format: Format,
+}
+
+#[derive(ValueEnum, Clone, Debug)]
+enum Format {
+    Normal,
+    Dash,
+    Upper,
+    Lower,
+    Camel,
+    Pascal,
+}
+
+impl fmt::Display for Format {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Format::Normal => write!(f, "normal"),
+            Format::Dash => write!(f, "dash"),
+            Format::Upper => write!(f, "upper"),
+            Format::Lower => write!(f, "lower"),
+            Format::Camel => write!(f, "camel"),
+            Format::Pascal => write!(f, "pascal"),
+        }
+    }
 }
 
 fn main() {
@@ -18,14 +42,13 @@ fn main() {
     let verb = verbs.choose(&mut rng).unwrap();
     let noun = nouns.choose(&mut rng).unwrap();
 
-    let output = match args.format.as_str() {
-        "normal" => format!("{} {}", verb, noun),
-        "dash" => format!("{}-{}", verb, noun),
-        "upper" => format!("{}_{}", verb.to_uppercase(), noun.to_uppercase()),
-        "lower" => format!("{}_{}", verb, noun),
-        "camel" => format!("{}{}", verb, capitalize(noun)),
-        "pascal" => format!("{}{}", capitalize(verb), capitalize(noun)),
-        _ => format!("{} {}", verb, noun),
+    let output = match args.format {
+        Format::Normal => format!("{} {}", verb, noun),
+        Format::Dash => format!("{}-{}", verb, noun),
+        Format::Upper => format!("{}_{}", verb.to_uppercase(), noun.to_uppercase()),
+        Format::Lower => format!("{}_{}", verb, noun),
+        Format::Camel => format!("{}{}", verb, capitalize(noun)),
+        Format::Pascal => format!("{}{}", capitalize(verb), capitalize(noun)),
     };
 
     println!("{}", output);
